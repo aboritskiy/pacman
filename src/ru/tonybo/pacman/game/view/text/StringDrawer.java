@@ -78,7 +78,7 @@ public class StringDrawer {
         GLES20.glEnableVertexAttribArray(maTextureHandle);
 
         Matrix.setIdentityM(mMMatrix, 0);
-//        Matrix.translateM(mMMatrix, 0, x, y, 0);
+        Matrix.translateM(mMMatrix, 0, x, y, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, mVMatrix, 0, mMMatrix, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mMVPMatrix, 0);
 
@@ -92,7 +92,7 @@ public class StringDrawer {
         float x2 = halfWidth;                       // Calculate Right X
         float y2 = halfHeight;                      // Calculate Top Y
         
-/*        mTriangleVertices.put(0, x1);
+        mTriangleVertices.put(0, x1);
         mTriangleVertices.put(1, y1);
         mTriangleVertices.put(3, textureRegion.u1);
         mTriangleVertices.put(4, textureRegion.v2);
@@ -111,7 +111,7 @@ public class StringDrawer {
         mTriangleVertices.put(20, x1);
         mTriangleVertices.put(21, y1);
         mTriangleVertices.put(23, textureRegion.u1);
-        mTriangleVertices.put(24, textureRegion.v2);*/
+        mTriangleVertices.put(24, textureRegion.v2);
         
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 2, 3);

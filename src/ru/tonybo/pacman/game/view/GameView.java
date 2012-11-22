@@ -19,9 +19,9 @@ public class GameView implements IDrawable{
 		clydeView = new GhostView(context, gameModel.getClydeModel(), CLYDE_COLOR);
 		
 		scoreView = new ScoreView(context, gameModel); 
-//		livesView = new LivesView(context, gameModel);
+		livesView = new LivesView(context, gameModel);
 		
-//		gameStateView = new GameStateView(context, gameModel);
+		gameStateView = new GameStateView(context, gameModel);
 		
 		energizerViews = new EnergizerView[gameModel.getEnergizerCount()];
 		int[][] energizerPath = gameModel.getEnergizerPath();
@@ -50,9 +50,9 @@ public class GameView implements IDrawable{
 		pacManView.draw(mProjMatrix, mVMatrix);
 		
 		scoreView.draw(mProjMatrix, mVMatrix);
-//		livesView.draw(mProjMatrix, mVMatrix);
+		livesView.draw(mProjMatrix, mVMatrix);
 		
-//		gameStateView.draw(mProjMatrix, mVMatrix);
+		gameStateView.draw(mProjMatrix, mVMatrix);
 	}
 	
 	private GameModel gameModel;

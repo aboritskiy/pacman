@@ -26,8 +26,8 @@ public class ScoreView implements IDrawable{
 
 	public void draw(float[] mProjMatrix, float[] mVMatrix) {
 		textString.setColorV(LABEL_COLOR);
-		textString.draw("S", -1.0f, -1.2f, mProjMatrix, mVMatrix);
-		//textString.setColorV(VALUE_COLOR);
-		//textString.draw("" + gameModel.getScore(), -0.55f, -1.2f, mProjMatrix, mVMatrix);
+		textString.draw("Score", -1.0f, -1.2f, mProjMatrix, mVMatrix);
+		textString.setColorV(VALUE_COLOR);
+		textString.draw("" + gameModel.getScore(), -0.55f, -1.2f, mProjMatrix, mVMatrix);
 	}
 }
