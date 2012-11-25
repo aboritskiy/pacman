@@ -13,7 +13,7 @@
 #include "view/PacManView.h"
 #include "view/EnergizerView.h"
 #include "view/ScoreView.h"
-//#include "view/LivesView.h"
+#include "view/LivesView.h"
 //#include "view/GameStateView.h"
 #include "data/IntPosition.h"
 #include "data/GLColor.h"
@@ -38,7 +38,7 @@ namespace game{
         clydeView = new GhostView( gameModel->getClydeModel(), CLYDE_COLOR );
         
         scoreView = new ScoreView(gameModel); 
-		//livesView = new LivesView(gameModel);
+		livesView = new LivesView(gameModel);
 		
 		//gameStateView = new GameStateView(gameModel);
         
@@ -66,7 +66,7 @@ namespace game{
         clydeView->draw(mProjMatrix, mVMatrix);
         
         scoreView->draw(mProjMatrix, mVMatrix);
-		//livesView->draw(mProjMatrix, mVMatrix);
+		livesView->draw(mProjMatrix, mVMatrix);
 		
 		//gameStateView->draw(mProjMatrix, mVMatrix);
     }

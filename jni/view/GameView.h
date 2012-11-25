@@ -11,7 +11,7 @@ namespace game{
     class PacManView;
     class GhostView;
     class ScoreView;
-    //class LivesView;
+    class LivesView;
     //class GameStateView;
     
     class GameView {
@@ -28,7 +28,7 @@ namespace game{
         GhostView* clydeView;
         
         ScoreView* scoreView;
-        //LivesView* livesView;
+        LivesView* livesView;
         
         //GameStateView* gameStateView;
         

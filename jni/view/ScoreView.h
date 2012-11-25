@@ -18,10 +18,13 @@ namespace game{
         GameModel* gameModel;
         TextString* textString;
 
+        static const int SCORE_LENGTH = 6;
+        char* scoreBuffer;
+
         public:
         ScoreView( GameModel* gameModel );
         void draw(glm::mat4 mProjMatrix, glm::mat4 mVMatrix);
     };
 }
 
-#endif 
+#endif

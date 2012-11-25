@@ -11,6 +11,7 @@ namespace game{
     class ClydeModel;
     class MotionDirection;
     class GameState;
+    class IntPosition;
  
     class GameModel {
         private:
@@ -50,8 +51,11 @@ namespace game{
         GhostModel* getClydeModel();
         PathArray& getTabletPath();
         PathArray& getEnergizerPath();
+        int getScore();
+        int getLives();
         int getEnergizerCount();
         void setMotionDirection( MotionDirection* md );
+        void checkGhostHit (IntPosition* pacManPosition, GhostModel* ghost);
     };
 }
 

@@ -24,7 +24,9 @@ namespace game{
     
     static const int TABLET_SCORE = 10;
     static const int ENERGIZER_SCORE = 50;
-    static const int GHOST_SCORE[4] = {200, 400, 800, 1600};
+
+    static const int GHOST_SCORE_LEVELS = 4;
+    static const int GHOST_SCORE[GHOST_SCORE_LEVELS] = {200, 400, 800, 1600};
 
     GameModel::GameModel() {
         PathArray fieldPathLocal = {
@@ -184,32 +186,39 @@ namespace game{
         return energizerCount;
     }
     
+    int GameModel::getScore() {
+            return score;
+        }
+
+    int GameModel::getLives() {
+            return lives;
+        }
+
     void GameModel::step(long time) {
-        /*if (gameState == GameState.LEVEL_INTRO) {
+        if (gameState == GameState::LEVEL_INTRO) {
 			long delta = time - enteredCurrentGameStateAt;
-			if (delta > gameState.duration()) {
-				gameState = GameState.GAME;
+			if (delta > gameState->getDuration()) {
+				gameState = GameState::GAME;
 				enteredCurrentGameStateAt = time;
 			}
-		} else if (gameState == GameState.LEVEL_COMPLETED) {
+		} else if (gameState == GameState::LEVEL_COMPLETED) {
 			long delta = time - enteredCurrentGameStateAt;
-			if (delta > gameState.duration()) {
+			if (delta > gameState->getDuration()) {
 				level++;
 				
 				resetLevel(time);
-				gameState = GameState.LEVEL_INTRO;
+				gameState = GameState::LEVEL_INTRO;
 				enteredCurrentGameStateAt = time;
 				
 			}
-		} else if (gameState == GameState.GAME_OVER) {
-			
+		} else if (gameState == GameState::GAME_OVER) {
 			long delta = time - enteredCurrentGameStateAt;
-			if (delta > gameState.duration()) {
-				gameState = GameState.LEVEL_INTRO;
+			if (delta > gameState->getDuration()) {
+				gameState = GameState::LEVEL_INTRO;
 				enteredCurrentGameStateAt = time;
-				gameOverHandler.obtainMessage().sendToTarget();
+//				gameOverHandler->obtainMessage()->sendToTarget();
 			}
-		} else*/ {
+		} else {
 			gameTime = time;
 		}
 		
@@ -225,31 +234,58 @@ namespace game{
 			tabletPath[pacManPosition->getY()][pacManPosition->getX()] = 0;
 			score += TABLET_SCORE;
 			tabletsEaten++;
-			/*if(tabletsEaten >= MAX_TABLETS) {
-				gameState = GameState.LEVEL_COMPLETED;
+			if(tabletsEaten >= MAX_TABLETS) {
+				gameState = GameState::LEVEL_COMPLETED;
 				enteredCurrentGameStateAt = gameTime;
 			}
-			blinkyModel.tabletEaten(gameTime, tabletsEaten);
-			pinkyModel.tabletEaten(gameTime, tabletsEaten);
-			inkeyModel.tabletEaten(gameTime, tabletsEaten);
-			clydeModel.tabletEaten(gameTime, tabletsEaten);*/
+			blinkyModel->tabletEaten(gameTime, tabletsEaten);
+			pinkyModel->tabletEaten(gameTime, tabletsEaten);
+			inkeyModel->tabletEaten(gameTime, tabletsEaten);
+			clydeModel->tabletEaten(gameTime, tabletsEaten);
 		} else if (energizerPath[pacManPosition->getY()][pacManPosition->getX()] > 0) {
 			energizerPath[pacManPosition->getY()][pacManPosition->getX()] = 0;
 			ghostsEaten = 0;
 			score += ENERGIZER_SCORE;
 			
-			/*blinkyModel.frighten();
-			pinkyModel.frighten();
-			inkeyModel.frighten();
-			clydeModel.frighten();*/
+			blinkyModel->frighten(gameTime);
+			pinkyModel->frighten(gameTime);
+			inkeyModel->frighten(gameTime);
+			clydeModel->frighten(gameTime);
 		}
 		
-		/*checkGhostHit( pacManPosition, blinkyModel);
+		checkGhostHit( pacManPosition, blinkyModel);
 		checkGhostHit( pacManPosition, pinkyModel);
 		checkGhostHit( pacManPosition, inkeyModel);
-		checkGhostHit( pacManPosition, clydeModel);*/
+		checkGhostHit( pacManPosition, clydeModel);
     }
     
+	void GameModel::checkGhostHit (IntPosition* pacManPosition, GhostModel* ghost) {
+		if(pacManPosition->equals(ghost->getCurrentPosition())) {
+			if (ghost->getIsFrightened()) {
+				/**
+				 * TODO: force ghost to return home
+				 * show earned points in place
+				 */
+				ghost->eaten(GHOST_SCORE[ghostsEaten]);
+				score += GHOST_SCORE[ghostsEaten];
+				ghostsEaten++;
+				if (ghostsEaten >= GHOST_SCORE_LEVELS) {
+					ghostsEaten = GHOST_SCORE_LEVELS - 1;
+				}
+
+			} else if (!ghost->getIsFrightened()){
+				lives--;
+				if (lives < 0) {
+					gameState = GameState::GAME_OVER;
+					enteredCurrentGameStateAt = gameTime;
+				} else {
+					resetPersons();
+				}
+			}
+		}
+	}
+
+
     void GameModel::setMotionDirection( MotionDirection* md ) {
         pacManModel->setMotionDirection(md);	
     }

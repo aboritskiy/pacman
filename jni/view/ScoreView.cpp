@@ -16,12 +16,15 @@ namespace game{
         textString = new TextString();
 		textString->loadFont("typodermic_foo_regular.ttf", 50, 2, 2);
 		textString->setScale(0.003f);
+
+		scoreBuffer = new char[SCORE_LENGTH];
     }
     
     void ScoreView::draw(glm::mat4 mProjMatrix, glm::mat4 mVMatrix) {
         textString->setColor(LABEL_COLOR);
 		textString->draw("Score", -1.0f, -1.2f, mProjMatrix, mVMatrix);
 		textString->setColor(VALUE_COLOR);
-		textString->draw(/*"" + gameModel.getScore()*/"0", -0.55f, -1.2f, mProjMatrix, mVMatrix);
+		snprintf ( scoreBuffer, SCORE_LENGTH, "%d", gameModel->getScore());
+		textString->draw(scoreBuffer, -0.55f, -1.2f, mProjMatrix, mVMatrix);
     }
 }

@@ -5,8 +5,6 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := NativeRenderer
 LOCAL_CFLAGS    := -Wno-psabi
 LOCAL_SRC_FILES := NativeRenderer.cpp\
-                    view/text/TextString.cpp\
-                    view/text/StringDrawer.cpp\
                     GLESUtils.cpp\
                     GameRenderer.cpp\
                     data/FloatPosition.cpp\
@@ -28,8 +26,12 @@ LOCAL_SRC_FILES := NativeRenderer.cpp\
                     view/PacManView.cpp\
                     view/ViewConstants.cpp\
                     view/ScoreView.cpp\
-                    view/text/TextureRegion.cpp
-                   
+                    view/LivesView.cpp\
+                    view/text/TextureRegion.cpp\
+                    view/text/TextString.cpp\
+                    view/text/StringDrawer.cpp
+
+LOCAL_C_INCLUDES := sources/cxx-stl/gnu-libstdc++/include/                    
 LOCAL_LDLIBS    := -L$(SYSROOT)/usr/lib -llog -lGLESv2
 
 include $(BUILD_SHARED_LIBRARY)
