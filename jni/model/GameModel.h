@@ -54,6 +54,8 @@ namespace game{
         int getScore();
         int getLives();
         int getEnergizerCount();
+        GameState* getGameState();
+        int getLevel();
         void setMotionDirection( MotionDirection* md );
         void checkGhostHit (IntPosition* pacManPosition, GhostModel* ghost);
     };

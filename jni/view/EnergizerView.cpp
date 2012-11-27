@@ -99,6 +99,9 @@ namespace game{
     }
     
     void EnergizerView::draw(glm::mat4 mProjMatrix, glm::mat4 mVMatrix) {
+    	if (tabletPath[modelPosition->getY()][modelPosition->getX()] == 0)
+    	    return;
+
         glUseProgram(mProgram);
         GLESUtils::checkGlError("glUseProgram");
 

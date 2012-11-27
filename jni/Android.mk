@@ -27,6 +27,7 @@ LOCAL_SRC_FILES := NativeRenderer.cpp\
                     view/ViewConstants.cpp\
                     view/ScoreView.cpp\
                     view/LivesView.cpp\
+                    view/GameStateView.cpp\
                     view/text/TextureRegion.cpp\
                     view/text/TextString.cpp\
                     view/text/StringDrawer.cpp

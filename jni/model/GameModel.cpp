@@ -187,12 +187,20 @@ namespace game{
     }
     
     int GameModel::getScore() {
-            return score;
-        }
+		return score;
+	}
 
     int GameModel::getLives() {
-            return lives;
-        }
+		return lives;
+	}
+
+    GameState* GameModel::getGameState() {
+		return gameState;
+	}
+
+	int GameModel::getLevel() {
+		return level;
+	}
 
     void GameModel::step(long time) {
         if (gameState == GameState::LEVEL_INTRO) {

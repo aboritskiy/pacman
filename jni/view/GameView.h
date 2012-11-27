@@ -12,7 +12,7 @@ namespace game{
     class GhostView;
     class ScoreView;
     class LivesView;
-    //class GameStateView;
+    class GameStateView;
     
     class GameView {
         GameModel* gameModel;
@@ -30,7 +30,7 @@ namespace game{
         ScoreView* scoreView;
         LivesView* livesView;
         
-        //GameStateView* gameStateView;
+        GameStateView* gameStateView;
         
         public:
         GameView(GameModel* gameModel);

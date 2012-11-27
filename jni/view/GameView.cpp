@@ -14,7 +14,7 @@
 #include "view/EnergizerView.h"
 #include "view/ScoreView.h"
 #include "view/LivesView.h"
-//#include "view/GameStateView.h"
+#include "view/GameStateView.h"
 #include "data/IntPosition.h"
 #include "data/GLColor.h"
   
@@ -40,7 +40,7 @@ namespace game{
         scoreView = new ScoreView(gameModel); 
 		livesView = new LivesView(gameModel);
 		
-		//gameStateView = new GameStateView(gameModel);
+		gameStateView = new GameStateView(gameModel);
         
         PathArray &energizerPath = gameModel->getEnergizerPath();
         int k = 0;
@@ -68,6 +68,6 @@ namespace game{
         scoreView->draw(mProjMatrix, mVMatrix);
 		livesView->draw(mProjMatrix, mVMatrix);
 		
-		//gameStateView->draw(mProjMatrix, mVMatrix);
+		gameStateView->draw(mProjMatrix, mVMatrix);
     }
 }
