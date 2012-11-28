@@ -31,8 +31,8 @@ namespace game{
 			textString->draw("GET READY!", -0.34f, -0.2f, mProjMatrix, mVMatrix);
 		} else if (gameState == GameState::LEVEL_COMPLETED) {
 			textString->setColor(INTRO_COLOR);
-			textString->draw("Level %02d", -0.25f, -0.2f, mProjMatrix, mVMatrix);
-			snprintf ( lvlBuffer, LVL_BUFFER_LENGTH, "%d", gameModel->getLevel());
+			textString->draw("Level", -0.25f, -0.2f, mProjMatrix, mVMatrix);
+			snprintf ( lvlBuffer, LVL_BUFFER_LENGTH, "%02d", gameModel->getLevel());
 			textString->setColor(VALUE_COLOR);
 			textString->draw(lvlBuffer, 0.1f, -0.2f, mProjMatrix, mVMatrix);
 		} else if (gameState == GameState::GAME_OVER) {
