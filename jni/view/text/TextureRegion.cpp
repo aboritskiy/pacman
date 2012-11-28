@@ -13,7 +13,5 @@ namespace game{
         this->v1 = y / texHeight;
         this->u2 = this->u1 + ( width / texWidth );
         this->v2 = this->v1 + ( height / texHeight );
-        
-        LOGI("%f %f %f %f", u1, v1, u2, v2);
     }
 }

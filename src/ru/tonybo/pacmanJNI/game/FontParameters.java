@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-import android.util.Log;
 
 public class FontParameters {
 	
@@ -43,7 +42,6 @@ public class FontParameters {
 	Context context;
 	   
 	public FontParameters (Context context, String fileName, int height, int padX, int padY) {
-		Log.d("FontParameters","begin");
 		this.context = context;
 		
 		charWidths = new float[CHAR_CNT];               // Create the Array of Character Widths
@@ -65,14 +63,11 @@ public class FontParameters {
 		colCnt = 0;
 		
 		loadFont (fileName, height, padX, padY);
-		Log.d("FontParameters","end");
 	}
 	
 	private Boolean loadFont (String fileName, int height, int padX, int padY) {
 		this.padX = padX;
 		this.padY = padY;
-		
-		Log.d("FontParameters", "height: " + height);
 		
 		// load the font and setup paint instance for drawing
 		Typeface tf = Typeface.createFromAsset( context.getAssets(), fileName );// Create the Typeface from Font File
@@ -145,7 +140,6 @@ public class FontParameters {
 		float y = ( cellHeight - 1 ) - fontDescent - padY;// Set Start Position (Y)
 		for ( char c = CHAR_START; c <= CHAR_END; c++ ){// FOR Each Character
 			s[0] = c;// Set Character to Draw
-			Log.d("FontParameters ","char \"" + s[0] + "\", x: " + x + ", y: " + y );
 			canvas.drawText( s, 0, 1, x, y, paint ); // Draw Character
 			x += cellWidth;// Move to Next Character
 			if ( ( x + cellWidth - padX ) > textureSize ){// IF End of Line Reached

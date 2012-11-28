@@ -1,6 +1,7 @@
 #.gitignore
 bin/*
 gen/*
-libs/armeabi/libNativeRenderer.so
+libs/*
+obj/*
 *.o
 *.o.d

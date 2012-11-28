@@ -36,6 +36,8 @@ namespace game{
         GameRenderer::env = env;
         GameRenderer::jparent = env->NewGlobalRef(jparent);
         GameRenderer::jvm = jvm;
+
+        lastTime = 0L;
     }
 
     void GameRenderer::onSurfaceCreated() {
@@ -48,11 +50,7 @@ namespace game{
             glm::vec3(0,1,0)    // up-vector
         );
         
-        /**
-        * TODO: parse up time correctly
-        */
         gameModel->resetGame(getTime());
-        //gameModel->resetGame(SystemClock.uptimeMillis());
     }
 
     void GameRenderer::onDrawFrame() {
@@ -64,9 +62,6 @@ namespace game{
         glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         checkGlError("glClear");
         
-        /**
-        * TODO: parse up time correctly
-        */
         gameModel->step(getTime());
         gameView->draw(mProjMatrix, mVMatrix);
     }
@@ -101,24 +96,6 @@ namespace game{
         env->CallVoidMethod(jparent, mid, resourceId, textureId);
     }
     
-    /*void GameRenderer::loadFont () {
-        JNIEnv *env = NULL;
-        if (jvm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
-            LOGE("Can not get the Java Env pointer");
-        }
-    
-        jclass jclassname = env->GetObjectClass(jparent);
-        jmethodID mid = env->GetMethodID(jclassname, "populateArr", "([I)V");
-        int* myArr = new int[2];
-        myArr[0] = 0;
-        myArr[1] = 1;
-        LOGD("populateArr1: %d %d", myArr[0], myArr[1]);
-        
-        env->CallVoidMethod(jparent, mid, myArr);
-        
-        //LOGD("populateArr2: %d %d", myArr[0], myArr[1]);
-    }*/
-    
     JavaVM* GameRenderer::getJVM () {
         return jvm;
     }
@@ -128,7 +105,7 @@ namespace game{
     }
     
     long GameRenderer::getTime() {
-        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time);
-        return floor(time.tv_nsec / 1000000) + (time.tv_sec * 1000);
+        gettimeofday( &timeValue, NULL );
+        return floor(timeValue.tv_usec / 1000) + timeValue.tv_sec * 1000;
     }
 }

@@ -31,6 +31,9 @@ namespace game{
             
             long getTime();
             timespec time;
+            struct timeval timeValue;
+
+            long lastTime;
 
         public:
             GameRenderer(

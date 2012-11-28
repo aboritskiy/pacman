@@ -110,4 +110,6 @@ public class NativeRenderer implements Renderer {
     private native void setMotionDirection(long gamePtr, int md);
 
     private long gamePtr = 0;
+    
+    private long lastTime = 0L;
 }

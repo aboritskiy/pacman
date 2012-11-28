@@ -47,7 +47,6 @@ namespace game{
     * Therefore some indication or abstration layer is needed!
     */
     char TextString::loadFont (const char* fileName, const int height, const int padX, const int padY) {
-        LOGI("loadFont begin");
         this->padX = padX;
         this->padY = padY;
         
@@ -62,54 +61,29 @@ namespace game{
         jmethodID mid = env->GetMethodID(env->GetObjectClass(jparent), "loadFont", "(Ljava/lang/String;III)Lru/tonybo/pacmanJNI/game/FontParameters;");
         
         jobject jFontParameters = env->CallObjectMethod(jparent, mid, jsFileName, height, padX, padY);
-        LOGI("loadFont end");
 
-    	/*LOGI("Begin Java call");
-        JNIEnv *env = NULL;
-        jobject jparent = GameRenderer::getJParent();
-        if (GameRenderer::getJVM()->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
-            LOGI("Can not get the Java Env pointer");
-        }
-        jmethodID mid = env->GetMethodID(env->GetObjectClass(jparent), "loadFont", "()I");
-        jint jTextureId = env->CallIntMethod(jparent, mid);
-        this->textureId = jTextureId;
-        LOGI("textureId %i", textureId);
-        */
-        
         jclass jcFontParameters = env->GetObjectClass(jFontParameters);
 
         this->fontHeight = env->GetFloatField( jFontParameters, env->GetFieldID( jcFontParameters, "fontHeight", "F"));
         this->fontAscent = env->GetFloatField( jFontParameters, env->GetFieldID( jcFontParameters, "fontAscent", "F"));
         this->fontDescent = env->GetFloatField( jFontParameters, env->GetFieldID( jcFontParameters, "fontDescent", "F"));
-//        this->charHeight = env->GetFloatField( jFontParameters, env->GetFieldID( jcFontParameters, "charHeight", "F"));
         
         this->textureId = env->GetIntField( jFontParameters, env->GetFieldID( jcFontParameters, "textureId", "I"));
         this->textureSize = env->GetIntField( jFontParameters, env->GetFieldID( jcFontParameters, "textureSize", "I"));
         this->cellWidth = env->GetIntField( jFontParameters, env->GetFieldID( jcFontParameters, "cellWidth", "I"));
         this->cellHeight = env->GetIntField( jFontParameters, env->GetFieldID( jcFontParameters, "cellHeight", "I"));
         
-        LOGI("fontHeight %f", fontHeight);
-        LOGI("fontAscent %f", fontAscent);
-        LOGI("fontDescent %f", fontDescent);
-        
-        LOGI("textureId %i", textureId);
-        LOGI("textureSize %i", textureSize);
-        LOGI("cellWidth %i", cellWidth);
-        LOGI("cellHeight %i", cellHeight);
-        
         jfloatArray jfaCharWidths = (jfloatArray)env->GetObjectField( jFontParameters, env->GetFieldID( jcFontParameters, "charWidths", "[F"));
         jboolean isCopy = JNI_TRUE;
         jfloat* jfCharWidths = env->GetFloatArrayElements(jfaCharWidths, &isCopy);
         for (int i = 0; i < CHAR_END; i++) {
             charWidths[i] = jfCharWidths[i];
-            LOGI("charWidth[%i]: %f", i, charWidths[i]);
         }
         env->ReleaseFloatArrayElements( jfaCharWidths, jfCharWidths, JNI_ABORT);
 
         float x = 0;
         float y = 0;
         for ( int c = 0; c < CHAR_CNT; c++ ){
-            LOGI("charRgn %i:",c);
 			charRgn[c] = new TextureRegion( textureSize, textureSize, x, y, cellWidth-1, cellHeight-1 );
 		 	x += cellWidth;
 		 	if ( (x + cellWidth) > textureSize ){

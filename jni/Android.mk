@@ -32,7 +32,6 @@ LOCAL_SRC_FILES := NativeRenderer.cpp\
                     view/text/TextString.cpp\
                     view/text/StringDrawer.cpp
 
-LOCAL_C_INCLUDES := sources/cxx-stl/gnu-libstdc++/include/                    
-LOCAL_LDLIBS    := -L$(SYSROOT)/usr/lib -llog -lGLESv2
+LOCAL_LDLIBS    := -llog -lGLESv2
 
 include $(BUILD_SHARED_LIBRARY)
