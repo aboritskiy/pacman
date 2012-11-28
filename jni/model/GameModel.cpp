@@ -112,9 +112,9 @@ namespace game{
     void GameModel::resetPersons() { 
         pacManModel->reset(gameTime);
 		blinkyModel->reset(gameTime);
-    }
-    
-    void GameModel::checkGhostHit() { 
+		pinkyModel->reset(gameTime);
+		inkeyModel->reset(gameTime);
+		clydeModel->reset(gameTime);
     }
 
     void GameModel::resetLevel(long time) {

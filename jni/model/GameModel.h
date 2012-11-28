@@ -37,7 +37,6 @@ namespace game{
         long enteredCurrentGameStateAt;
         
         void resetPersons();
-        void checkGhostHit();
 
         public:
         GameModel();
