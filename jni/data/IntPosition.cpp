@@ -21,4 +21,8 @@ namespace game{
     int IntPosition::getY () {
         return y;
     }
+
+    IntPosition* IntPosition::clone () {
+		return new IntPosition(x,y);
+	}
 }

@@ -8,6 +8,7 @@
 #include "model/PinkyModel.h"
 #include "model/InkeyModel.h"
 #include "model/ClydeModel.h"
+#include "model/IGameOverHandler.h"
 #include "data/MotionDirection.h"
 #include "data/TileType.h"
 #include "data/IntPosition.h"
@@ -28,7 +29,7 @@ namespace game{
     static const int GHOST_SCORE_LEVELS = 4;
     static const int GHOST_SCORE[GHOST_SCORE_LEVELS] = {200, 400, 800, 1600};
 
-    GameModel::GameModel() {
+    GameModel::GameModel(IGameOverHandler* gameOverHandler) : gameOverHandler (gameOverHandler){
         PathArray fieldPathLocal = {
             { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 },
             { 0x00,0x00,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x00,0x00,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x32,0x00,0x00 },
@@ -150,6 +151,7 @@ namespace game{
     
         level = 1;
 		lives = MAX_LIVES;
+		score = 0;
 		
 		resetLevel(time);
     }
@@ -224,7 +226,8 @@ namespace game{
 			if (delta > gameState->getDuration()) {
 				gameState = GameState::LEVEL_INTRO;
 				enteredCurrentGameStateAt = time;
-//				gameOverHandler->obtainMessage()->sendToTarget();
+				if (gameOverHandler != 0)
+					gameOverHandler->handleGameOver();
 			}
 		} else {
 			gameTime = time;
@@ -268,8 +271,8 @@ namespace game{
     }
     
 	void GameModel::checkGhostHit (IntPosition* pacManPosition, GhostModel* ghost) {
-		if(pacManPosition->equals(ghost->getCurrentPosition())) {
-			if (ghost->getIsFrightened()) {
+		if(!ghost->getIsReturning() && pacManPosition->equals(ghost->getCurrentPosition())) {
+			if (ghost->getIsFrightened() ) {
 				/**
 				 * TODO: force ghost to return home
 				 * show earned points in place

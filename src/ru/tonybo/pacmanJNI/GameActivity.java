@@ -8,15 +8,6 @@ import android.view.View;
 
 public class GameActivity extends Activity {
 	
-	@SuppressWarnings("unused")
-	private class GameOverHandler implements Runnable {
-
-		@Override
-		public void run() {
-			handleGameOver();
-		}
-	}
-
     private GLSurfaceView gameView;
     private int menuViewID;
     
@@ -31,10 +22,8 @@ public class GameActivity extends Activity {
     	super.onCreate(savedInstanceState);
     	
     	gameOverHandler = new Handler() {
-
     	    public void handleMessage (Message msg){
     	    	handleGameOver();
-    	    	//runOnUiThread(new GameOverHandler());
     	    }
     	};
     	gameView = new GameView(this, gameOverHandler);
@@ -50,13 +39,7 @@ public class GameActivity extends Activity {
     }
 
 	private void handleGameOver() {
-		/**
-		 * TODO: switch back to main menu
-		 */
-		
 		setContentView(menuViewID); 		// after this gameView freezes
 		gameView.setVisibility(View.GONE);	// after this application throw an error: android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.
-
-
 	}
 }

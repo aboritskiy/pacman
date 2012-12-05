@@ -1,6 +1,7 @@
 #include <jni.h>  
 #include <string.h>  
-#include <android/log.h>  
+#include <android/log.h>
+#include <math.h>
 
 #include "GLESUtils.h"
   
@@ -73,4 +74,10 @@ namespace game{
         const char *v = (const char *) glGetString(s);
         LOGI("GL %s = %s\n", name, v);
     }
+
+    static timeval timeValue;
+    long GLESUtils::getTime() {
+    	gettimeofday( &timeValue, NULL );
+		return floor(timeValue.tv_usec / 1000) + timeValue.tv_sec * 1000;
+	}
 }

@@ -10,9 +10,9 @@
 #include "data/FloatPosition.h"
 #include "data/MotionDirection.h"
 #include "data/TileType.h"
+#include "model/IGhostEatenHandler.h"
   
 #define DEBUG_TAG "NDK_GhostModel"
-#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,DEBUG_TAG,__VA_ARGS__)
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,DEBUG_TAG,__VA_ARGS__)
   
 namespace game{
@@ -33,6 +33,8 @@ namespace game{
             IntPosition* scatterPosition,
             int tabletsToLeaveHome
         ) : PersonModel ( path, permissionLevel ) {
+
+    	ghostEatenHandler = 0;
         
         DEFAULT_ANIMATION_DURATION = 200.0f;
         animationDuration = DEFAULT_ANIMATION_DURATION;
@@ -48,7 +50,7 @@ namespace game{
 
         FRIGHT_DURATION = 10000L;
         
-        tabletsTimeToLeftHome = 10000;
+        tabletsTimeToLeaveHome = 10000;
         
         this->defaultHomePermission = defaultHomePermission;
 		this->homePermission = defaultHomePermission;
@@ -59,7 +61,8 @@ namespace game{
 		LEAVE_HOME_POSITION = new IntPosition(14,11);
 		GET_BODY_POSITION = new IntPosition(14,14);
         
-        this->tabletsToLeftHome = tabletsToLeftHome;
+        this->tabletsToLeaveHome = tabletsToLeaveHome;
+        LOGD("tabletsToLeaveHome: %d %d", this->tabletsToLeaveHome, tabletsToLeaveHome);
         
         reset(0L);
     }
@@ -122,7 +125,7 @@ namespace game{
 			}
 		}
 		
-		if (isTrapped && ((time - tabletsTimeToLeftHome) > lastTabletEatenAt)) {
+		if (isTrapped && ((time - tabletsTimeToLeaveHome) > lastTabletEatenAt)) {
 			isTrapped = false;
 		}
 	}
@@ -147,9 +150,10 @@ namespace game{
         return (FRIGHT_DURATION - time + lastFrightenModeChangeAt);
     }
     
-    /*void GhostModel::setGhostEatenHandler(IGhostEatenHandler* value) {
+    void GhostModel::setGhostEatenHandler(IGhostEatenHandler* value) {
+    	LOGD("GhostModel::setGhostEatenHandler");
         ghostEatenHandler = value;
-    }*/
+    }
     
     IntPosition* GhostModel::calculateTargetPosition() {
         IntPosition* pacManPosition = pacManModel->getCurrentPosition();
@@ -176,8 +180,9 @@ namespace game{
 		isReturning = true;
 		homePermission = homePermission | TileType::GHOST_HOME;
 		
-		/*if (ghostEatenHandler != null)
-			ghostEatenHandler->handleGhostEaten(currentPosition, score);*/
+		LOGD("GhostModel::eaten");
+		if (ghostEatenHandler != 0)
+			ghostEatenHandler->handleGhostEaten(currentPosition, score);
 	}
     
     void GhostModel::step(long time) {
@@ -366,8 +371,9 @@ namespace game{
 	}
     
     void GhostModel::tabletEaten (long time, int tabletsEaten) {
+    	LOGD("tabletsToLeaveHome: %d %d", tabletsEaten, tabletsToLeaveHome);
 		lastTabletEatenAt = time;
-		if (isTrapped && (tabletsEaten > tabletsToLeftHome))
+		if (isTrapped && (tabletsEaten > tabletsToLeaveHome))
 			isTrapped = false;
 	}
 }

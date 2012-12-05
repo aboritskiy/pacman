@@ -10,17 +10,19 @@
 #include "data/IntPosition.h"
 #include "data/FloatPosition.h"
 #include "model/GhostModel.h"
+#include "view/text/TextString.h"
 
 #define  LOG_TAG    "NDK_GhostView"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
   
 namespace game{
-    static const GLfloat BASE_PACMAN_SIZE = 0.06f;
-    
     static const int FLOAT_SIZE_BYTES = 4;
     static const int TRIANGLE_VERTICES_DATA_STRIDE_BYTES = 5 * FLOAT_SIZE_BYTES;
     static const int TRIANGLE_VERTICES_DATA_POS_OFFSET = 0;
     static const int TRIANGLE_VERTICES_DATA_UV_OFFSET = 3;
+
+    static GLColor GHOST_EATEN_COLOR = { 1.0f, 1.0f, 0.0f, 1.0f };
+    static int GHOST_EATEN_DISPLAY_TIME = 3000;
 
     static const float BASE_SIZE = 0.06f;
            
@@ -95,6 +97,15 @@ namespace game{
                 "  gl_FragColor = col;\n"
                 "}\n";
     GhostView::GhostView( GhostModel* ghostModel, GLColor &ghostColor ) : ghostModel(ghostModel), GHOST_COLOR(ghostColor) {
+    	ghostEatenTextString = new TextString();
+		ghostEatenTextString->loadFont("typodermic_foo_regular.ttf", 50, 2, 2);
+		ghostEatenTextString->setScale(0.0015f);
+		ghostEatenTextString->setColor(GHOST_EATEN_COLOR);
+
+		ghostModel->setGhostEatenHandler(this);
+		scoreBuffer = new char[SCORE_BUFFER_LENGTH];
+		ghostEatenTime = 0L;
+
         phase = 0.0f;
         forwardAnimation = 1;
         
@@ -178,9 +189,9 @@ namespace game{
     }
     
     void GhostView::handleGhostEaten (IntPosition* ghostPosition, int score) {
-		/*ghostEatenTime = SystemClock.uptimeMillis();
-		ghostEatenScore = score;
-		ghostEatenPosition = ghostPosition;*/
+		ghostEatenTime = GLESUtils::getTime();
+		snprintf ( scoreBuffer, SCORE_BUFFER_LENGTH, "%d", score);
+		ghostEatenPosition = ghostPosition->clone();
 	}
     
     void GhostView::draw(glm::mat4 mProjMatrix, glm::mat4 mVMatrix) {
@@ -216,10 +227,8 @@ namespace game{
         glEnableVertexAttribArray(maTextureHandle);
         GLESUtils::checkGlError("glEnableVertexAttribArray maTextureHandle");
         
-        struct timeval* now = new timeval();
-        gettimeofday(now, NULL);
-        float currentMillis = floor(now->tv_usec / 1000.0f);
-        long time2 = fmod(currentMillis, 640L);
+        long now = GLESUtils::getTime();
+        long time2 = fmod(now, 640L);
         long time = fmod(time2, 160L); 
         
         int modeOffset = 0;
@@ -228,7 +237,7 @@ namespace game{
         char drawBody = true;
         
         if (ghostModel->getIsFrightened()) {
-        	long timeLeft = ghostModel->timeInFrightenStateLeft(currentMillis);
+        	long timeLeft = ghostModel->timeInFrightenStateLeft(now);
         	if ((timeLeft > 0) && (timeLeft < FRIGHTEN_BLINK_DURATION) && (time2 < 320)) {
         		modeOffset = 12;
         	} else {
@@ -321,15 +330,14 @@ namespace game{
 	        glDrawArrays(GL_TRIANGLES, 18, 3);
 	        GLESUtils::checkGlError("glDrawArrays");
         }
-        /*long delta = currentMillis - ghostEatenTime;
-        if (delta < GHOST_EATEN_DISPLAY_TIME) {
-        	ghostEatenTextString.draw(
-    			"" + ghostEatenScore,
-    			ViewConstants::LEFT_TOP_CORNER->getX() + ViewConstants::PATH_CELL_SIZE_X * ((float)ghostEatenPosition->getX() - 1.5f),
-    			ViewConstants::LEFT_TOP_CORNER->getY() - ViewConstants::PATH_CELL_SIZE_Y * ((float)ghostEatenPosition->getY() - 0.5f),
+        if ((now - ghostEatenTime) < GHOST_EATEN_DISPLAY_TIME) {
+        	ghostEatenTextString->draw(
+        		scoreBuffer,
+    			ViewConstants::LEFT_TOP_CORNER->getX() + ViewConstants::PATH_CELL_SIZE_X * (ghostEatenPosition->getX() - 1.5f),
+    			ViewConstants::LEFT_TOP_CORNER->getY() - ViewConstants::PATH_CELL_SIZE_Y * (ghostEatenPosition->getY() - 0.5f),
     			mProjMatrix,
     			mVMatrix
         	);
-        }*/
+        }
     }
 }

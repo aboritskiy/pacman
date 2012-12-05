@@ -9,12 +9,14 @@
 #include <GLES2/gl2ext.h>
 
 #include "data/GLColor.h"
+#include "model/IGhostEatenHandler.h"
 
 namespace game{
     class GhostModel;
     class IntPosition;
+    class TextString;
 
-    class GhostView {
+    class GhostView : public IGhostEatenHandler {
         static const int FLOAT_SIZE_BYTES = 4;
         static const int TRIANGLE_VERTICES_DATA_STRIDE_BYTES = 5 * FLOAT_SIZE_BYTES;
         static const int TRIANGLE_VERTICES_DATA_POS_OFFSET = 0;
@@ -39,16 +41,21 @@ namespace game{
         GhostModel* ghostModel;
         GLColor &GHOST_COLOR;
         
-        int GHOST_EATEN_DISPLAY_TIME;
-        float GHOST_EATEN_COLOR[];
-        
+    	IntPosition* ghostEatenPosition;
+        long ghostEatenTime;
+
+        static const int SCORE_BUFFER_LENGTH = 4;
+		char* scoreBuffer;
+
+    	TextString* ghostEatenTextString;
+
         float phase;
         char forwardAnimation;
     
         public:
         GhostView( GhostModel* ghostModel, GLColor &ghostColor );
-        void handleGhostEaten (IntPosition* ghostPosition, int score);
         void draw(glm::mat4 mProjMatrix, glm::mat4 mVMatrix);
+        void handleGhostEaten (IntPosition* ghostPosition, int score);
     };
 }
 

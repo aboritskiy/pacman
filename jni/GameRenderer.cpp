@@ -8,6 +8,7 @@
 #include "view/GameView.h"
 #include "data/MotionDirection.h"
 #include "view/text/TextString.h"
+#include "GLESUtils.h"
 
 #define  LOG_TAG    "NDK_GameRenderer"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
@@ -36,12 +37,10 @@ namespace game{
         GameRenderer::env = env;
         GameRenderer::jparent = env->NewGlobalRef(jparent);
         GameRenderer::jvm = jvm;
-
-        lastTime = 0L;
     }
 
     void GameRenderer::onSurfaceCreated() {
-        gameModel = new GameModel ();
+        gameModel = new GameModel (this);
 		gameView = new GameView (gameModel);
         
         mVMatrix = glm::lookAt(
@@ -50,7 +49,7 @@ namespace game{
             glm::vec3(0,1,0)    // up-vector
         );
         
-        gameModel->resetGame(getTime());
+        gameModel->resetGame(GLESUtils::getTime());
     }
 
     void GameRenderer::onDrawFrame() {
@@ -62,7 +61,7 @@ namespace game{
         glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         checkGlError("glClear");
         
-        gameModel->step(getTime());
+        gameModel->step(GLESUtils::getTime());
         gameView->draw(mProjMatrix, mVMatrix);
     }
     
@@ -82,6 +81,17 @@ namespace game{
         gameModel->setMotionDirection( md );
     }
     
+    void GameRenderer::handleGameOver () {
+    	JNIEnv *env = NULL;
+		if (jvm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
+			LOGE("Can not get the Java Env pointer");
+		}
+
+		jclass jclassname = env->GetObjectClass(jparent);
+		jmethodID mid = env->GetMethodID(jclassname, "handleGameOver", "()V");
+		env->CallVoidMethod(jparent, mid);
+   	}
+
     void GameRenderer::createGlTextureFromResource (int resourceId, int textureId) {
         JNIEnv *env = NULL;
         if (jvm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
@@ -95,17 +105,12 @@ namespace game{
         jmethodID mid = env->GetMethodID(jclassname, "createGLTextureFromResource", "(II)V");
         env->CallVoidMethod(jparent, mid, resourceId, textureId);
     }
-    
+
     JavaVM* GameRenderer::getJVM () {
         return jvm;
     }
     
     jobject GameRenderer::getJParent () {
         return jparent;
-    }
-    
-    long GameRenderer::getTime() {
-        gettimeofday( &timeValue, NULL );
-        return floor(timeValue.tv_usec / 1000) + timeValue.tv_sec * 1000;
     }
 }

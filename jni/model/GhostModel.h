@@ -10,6 +10,7 @@ namespace game{
     class FloatPosition;
     class PacManModel;
     class TileType;
+    class IGhostEatenHandler;
  
     class GhostModel : public PersonModel{
         protected:
@@ -53,10 +54,10 @@ namespace game{
         long lastFrightenBegunAt;
         long FRIGHT_DURATION; 
         
-//      IGhostEatenHandler ghostEatenHandler;
+        IGhostEatenHandler* ghostEatenHandler;
         
-        int tabletsToLeftHome;
-        int tabletsTimeToLeftHome;
+        int tabletsToLeaveHome;
+        int tabletsTimeToLeaveHome;
         long lastTabletEatenAt;
         
         void forceDirectionChange ();
@@ -86,7 +87,7 @@ namespace game{
         char getIsFrightened();
         char getIsReturning();
         long timeInFrightenStateLeft(long time);
-        //void setGhostEatenHandler();
+        void setGhostEatenHandler( IGhostEatenHandler* value );
         void frighten(long time);
         void eaten(int score);
         void tabletEaten(long time, int tabletsEaten);

@@ -32,7 +32,7 @@ namespace game{
 		} else if (gameState == GameState::LEVEL_COMPLETED) {
 			textString->setColor(INTRO_COLOR);
 			textString->draw("Level", -0.25f, -0.2f, mProjMatrix, mVMatrix);
-			snprintf ( lvlBuffer, LVL_BUFFER_LENGTH, "%02d", gameModel->getLevel());
+			snprintf ( lvlBuffer, LVL_BUFFER_LENGTH, "%02d", gameModel->getLevel() + 1);
 			textString->setColor(VALUE_COLOR);
 			textString->draw(lvlBuffer, 0.1f, -0.2f, mProjMatrix, mVMatrix);
 		} else if (gameState == GameState::GAME_OVER) {

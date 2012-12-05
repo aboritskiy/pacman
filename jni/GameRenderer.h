@@ -2,13 +2,13 @@
 #define GAME_RENDERER
 
 #include <jni.h>
-#include <time.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include "model/IGameOverHandler.h"
 
 namespace game{
     class GameModel;
@@ -16,7 +16,7 @@ namespace game{
     class MotionDirection;
     class TextString;
     
-    class GameRenderer {
+    class GameRenderer : public IGameOverHandler{
             static JNIEnv*      env;
             static jobject      jparent;
             static JavaVM*      jvm;
@@ -28,12 +28,6 @@ namespace game{
             
             glm::mat4 mProjMatrix;
             glm::mat4 mVMatrix;
-            
-            long getTime();
-            timespec time;
-            struct timeval timeValue;
-
-            long lastTime;
 
         public:
             GameRenderer(
@@ -46,6 +40,7 @@ namespace game{
             void onDrawFrame();
             void onSurfaceChanged(int width, int height);
             void setMotionDirection( MotionDirection* md );
+            void handleGameOver();
             
             static void createGlTextureFromResource (int resourceId, int textureId);
             static JavaVM* getJVM();

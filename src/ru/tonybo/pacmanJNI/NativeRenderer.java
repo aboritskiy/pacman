@@ -29,6 +29,7 @@ public class NativeRenderer implements Renderer {
 		super();
 		
 		this.context = context;
+		this.gameOverHandler = gameOverHandler;
         gamePtr = create();
 	}
     
@@ -91,6 +92,10 @@ public class NativeRenderer implements Renderer {
     	return new FontParameters(context, fileName, height, padX, padY);
     }
     
+    public void handleGameOver() {
+    	gameOverHandler.obtainMessage().sendToTarget();
+    }
+    
 	@Override
     protected void finalize() throws Throwable {
         if (gamePtr != 0) {
@@ -100,6 +105,7 @@ public class NativeRenderer implements Renderer {
     }
 	
 	private Context context;
+	private Handler gameOverHandler;
 
 	private native long create();
     private native void destroy(long gamePtr);    

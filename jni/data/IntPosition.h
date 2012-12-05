@@ -13,6 +13,7 @@ namespace game{
         char equals(IntPosition* position);
         int getX();
         int getY();
+        IntPosition* clone ();
     };
 }
 

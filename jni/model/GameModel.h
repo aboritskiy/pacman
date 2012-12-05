@@ -12,6 +12,7 @@ namespace game{
     class MotionDirection;
     class GameState;
     class IntPosition;
+    class IGameOverHandler;
  
     class GameModel {
         private:
@@ -38,8 +39,10 @@ namespace game{
         
         void resetPersons();
 
+        IGameOverHandler* gameOverHandler;
+
         public:
-        GameModel();
+        GameModel(IGameOverHandler* gameOverHandler);
         void step(long time);
         void resetLevel(long time);
         void resetGame(long time);
